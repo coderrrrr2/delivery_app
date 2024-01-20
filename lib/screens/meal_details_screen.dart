@@ -1,3 +1,4 @@
+import 'package:delivery_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
 class MealDetailsScreen extends StatefulWidget {
@@ -10,16 +11,31 @@ class MealDetailsScreen extends StatefulWidget {
 }
 
 class _MealDetailsScreenState extends State<MealDetailsScreen> {
-  double screenWidth = 0.0;
-  double screenHeight = 0.0;
   int quantity = 1;
-
   int checkoutPrice = 1;
+
+  Widget addWidth(double width) {
+    return SizedBox(
+      width: width,
+    );
+  }
+
+  Widget addHeight({required double height}) {
+    return SizedBox(
+      height: height,
+    );
+  }
+
+  void moveTo(Function() screen) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => screen(),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = (MediaQuery.of(context).size.height) / 1.7;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = (MediaQuery.of(context).size.height) / 1.7;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -31,7 +47,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
                 children: [
-                  InkWell(
+                  GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
                     child: Container(
                       width: 50,
@@ -48,17 +64,19 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                   ),
                   const Spacer(),
                   Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white,
-                    ),
-                    child: const Icon(
-                      Icons.hearing_outlined,
-                      color: Colors.red,
-                    ),
-                  ),
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Image.asset(
+                          "assets/images/icons8-love-96.png",
+                          fit: BoxFit.contain,
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -79,14 +97,15 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                     child: Column(
                       children: [
                         Container(
-                          width: 380,
-                          height: 300,
+                          width: 400,
+                          height: 330,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Image.asset(
-                            "assets/images/bitmoji_png.png",
-                            fit: BoxFit.contain,
+                          child: Image.network(
+                            "https://res.cloudinary.com/eralphcloud/image/upload/v1705306732/routelift-list/n2y94lqrjnscu1vslcif.png",
+                            fit: BoxFit
+                                .contain, // Use BoxFit.cover for the image
                           ),
                         ),
                         const SizedBox(
@@ -94,15 +113,18 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                         ),
                         Container(
                           height: 50,
-                          width: screenWidth / 1.2,
-                          child: const SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Text(
-                              "Fish dfef df d fd d f df d d f ",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 40,
-                                fontWeight: FontWeight.w700,
+                          width: screenWidth / 1.1,
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                "Chicken Curry with rice",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
                             ),
                           ),
@@ -110,46 +132,67 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Icon(Icons.alarm),
-                            Text("30 min"),
-                            Icon(Icons.fire_extinguisher),
-                            Text("275 calories"),
-                            Icon(Icons.star),
-                            Text('4.9')
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 42,
+                                height: 42,
+                                child: Image.asset(
+                                    "assets/images/icons8-furnitureandhousehold-64.png"),
+                              ),
+                              addWidth(5),
+                              const Text(
+                                "30 min",
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w900),
+                              ),
+                              Container(
+                                width: 60,
+                                height: 60,
+                                child: Image.asset(
+                                    "assets/images/icons8-flame-96 copy.png"),
+                              ),
+                              const Text(
+                                "275 calories",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w900),
+                              ),
+                              addWidth(5),
+                              Container(
+                                width: 45,
+                                height: 45,
+                                child: Image.asset(
+                                    "assets/images/icons8-star-96.png"),
+                              ),
+                              addWidth(5),
+                              const Text(
+                                '4.9',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w900),
+                              )
+                            ],
+                          ),
                         ),
                         Container(
-                          width: 200,
-                          height: 200,
-                          child: const SingleChildScrollView(
-                            child: Text(
-                              """ dffdffd
-                            dffdffdf
-                            dfdfdfdfdf
-                            dfdfdffdf
-                            dfdfdfd
-                            d
-                            d
-                            d
-                            d
-                            d
-                            d
-                            d
-                            """,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500,
+                          height: 170,
+                          width: 400,
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: SingleChildScrollView(
+                              child: Text(
+                                "Indulge in the delightful experience of Product 1, a perfect blend of flavors and nutrition to satisfy your cravings. Created with care, this dish promises a memorable dining experience.",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 30,
-                        ),
+                        addHeight(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -167,7 +210,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (quantity > 0) {
+                                        if (quantity > 1) {
                                           quantity = quantity - 1;
                                           updateCheckoutPrice();
                                         }
@@ -195,14 +238,12 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                               ),
                             ),
                             const SizedBox(
-                              width: 40,
+                              width: 30,
                             ),
-                            InkWell(
-                              onTap: () {
-                                // Handle checkout button tap
-                              },
+                            GestureDetector(
+                              onTap: () => moveTo(() => const MapScreen()),
                               child: Container(
-                                width: 200,
+                                width: 220,
                                 height: 70,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
@@ -210,11 +251,11 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Checkout  $checkoutPrice',
+                                    'Checkout \$$checkoutPrice',
                                     style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
+                                        color: Colors.white,
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),

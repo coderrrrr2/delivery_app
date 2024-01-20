@@ -12,6 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Color containerColor = Colors.white;
+
   final List<MealItem> meals = [
     const MealItem(mealName: "akara"),
     const MealItem(mealName: "akara"),
@@ -23,26 +25,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 238, 234, 234),
+      backgroundColor: const Color.fromARGB(255, 238, 234, 234),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 5, left: 20, right: 20),
+          padding: const EdgeInsets.only(
+            top: 5,
+            left: 20,
+            right: 20,
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(Icons.draw),
+                  const Icon(Icons.menu),
                   const Spacer(),
                   Container(
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(100)),
                     width: 50,
                     height: 50,
-                    child: Image.asset(
-                      "assets/images/bitmoji_png.png",
-                      fit: BoxFit.contain,
+                    child: ClipOval(
+                      child: Image.asset(
+                        "assets/images/bitmoji_png.png",
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ],
@@ -64,17 +71,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: imageCategories.entries
                     .map(
                       (MapEntry<String, String> entry) => Padding(
-                        padding: const EdgeInsets.only(right: 20),
+                        padding: const EdgeInsets.only(right: 18, left: 18),
                         child: Column(
                           children: [
-                            Container(
-                              decoration: const BoxDecoration(boxShadow: [
-                                // TODO: Add shadoW
-                              ]),
-                              width: 50,
-                              height: 50,
-                              child: Image.asset(
-                                entry.value,
+                            GestureDetector(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: containerColor,
+                                ),
+                                width: 60,
+                                height: 60,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    entry.value,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -94,10 +107,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Popular Now",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              addHeight(80),
+              addHeight(30),
               SizedBox(
                 width: double.infinity,
-                height: 310,
+                height: 305,
                 child: ListView.builder(
                   // padding: const EdgeInsets.all(20),
                   scrollDirection: Axis.horizontal,
@@ -120,33 +133,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite,
-            ),
-            label: '',
-          ),
-        ],
-      ),
     );
   }
 }
 
 addHeight(double height) => SizedBox(height: height);
-
 
 // goTo()
