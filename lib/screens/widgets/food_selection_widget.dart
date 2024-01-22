@@ -20,7 +20,7 @@ class _FoodSelectionWidgetState extends State<FoodSelectionWidget> {
         children: [
           Container(
             width: 210,
-            height: 210,
+            height: 230,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white,

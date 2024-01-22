@@ -1,3 +1,4 @@
+import 'package:delivery_app/constants.dart';
 import 'package:flutter/material.dart';
 
 class CallerWidget extends StatelessWidget {
@@ -13,7 +14,7 @@ class CallerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 7, 16, 24),
+        color: const Color.fromARGB(255, 27, 32, 36),
         borderRadius: BorderRadius.circular(100),
       ),
       width: 390,
@@ -51,6 +52,7 @@ class CallerWidget extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
                     ),
+                    addHeight(height: 5),
                     const Text(
                       "Courier",
                       style: TextStyle(color: Colors.grey),

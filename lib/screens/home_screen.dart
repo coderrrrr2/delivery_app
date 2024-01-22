@@ -1,3 +1,6 @@
+import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/screens/widgets/food_categories.dart';
+import 'package:delivery_app/screens/widgets/home_screen_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery_app/models/meal_item.dart';
 import 'package:delivery_app/screens/meal_details_screen.dart';
@@ -26,13 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 238, 234, 234),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 5,
-            left: 20,
-            right: 20,
-          ),
+      body: Padding(
+        padding: const EdgeInsets.only(
+          top: 10,
+          left: 20,
+          right: 15,
+        ),
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -65,49 +68,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Fast Delivery.",
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
               ),
-              addHeight(40),
+              addHeight(height: 40),
               Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: imageCategories.entries
-                    .map(
-                      (MapEntry<String, String> entry) => Padding(
-                        padding: const EdgeInsets.only(right: 18, left: 18),
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: containerColor,
-                                ),
-                                width: 60,
-                                height: 60,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    entry.value,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              entry.key,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
+                    .map((MapEntry<String, String> entry) => FoodCategories(
+                          entryObject: entry,
+                        ))
                     .toList(),
               ),
-              addHeight(60),
+              addHeight(height: 60),
               const Text(
                 "Popular Now",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
               ),
-              addHeight(30),
+              addHeight(height: 30),
               SizedBox(
                 width: double.infinity,
                 height: 305,
@@ -133,10 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: HomeScreenNavBar(),
     );
   }
 }
 
-addHeight(double height) => SizedBox(height: height);
 
 // goTo()

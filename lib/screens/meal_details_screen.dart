@@ -1,3 +1,4 @@
+import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,31 +15,13 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
   int quantity = 1;
   int checkoutPrice = 1;
 
-  Widget addWidth(double width) {
-    return SizedBox(
-      width: width,
-    );
-  }
-
-  Widget addHeight({required double height}) {
-    return SizedBox(
-      height: height,
-    );
-  }
-
-  void moveTo(Function() screen) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => screen(),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = (MediaQuery.of(context).size.height) / 1.7;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 29, 27, 27),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -142,7 +125,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                 child: Image.asset(
                                     "assets/images/icons8-furnitureandhousehold-64.png"),
                               ),
-                              addWidth(5),
+                              addWidth(width: 5),
                               const Text(
                                 "30 min",
                                 style: TextStyle(
@@ -159,14 +142,14 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w900),
                               ),
-                              addWidth(5),
+                              addWidth(width: 5),
                               Container(
                                 width: 45,
                                 height: 45,
                                 child: Image.asset(
                                     "assets/images/icons8-star-96.png"),
                               ),
-                              addWidth(5),
+                              addWidth(width: 5),
                               const Text(
                                 '4.9',
                                 style: TextStyle(
@@ -175,10 +158,10 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                             ],
                           ),
                         ),
-                        Container(
+                        const SizedBox(
                           height: 170,
                           width: 400,
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.all(8.0),
                             child: SingleChildScrollView(
                               child: Text(
@@ -241,7 +224,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                               width: 30,
                             ),
                             GestureDetector(
-                              onTap: () => moveTo(() => const MapScreen()),
+                              onTap: () => moveTo(() => MapScreen(), context),
                               child: Container(
                                 width: 220,
                                 height: 70,
