@@ -1,3 +1,4 @@
+import 'package:delivery_app/constants.dart';
 import 'package:flutter/material.dart';
 
 class FoodSelectionWidget extends StatefulWidget {
@@ -35,8 +36,15 @@ class _FoodSelectionWidgetState extends State<FoodSelectionWidget> {
               width: 160,
               height: 170,
               child: Image.network(
-                "https://res.cloudinary.com/eralphcloud/image/upload/v1705306732/routelift-list/n2y94lqrjnscu1vslcif.png",
+                imageUrl, // Assuming you have a mealImageURL property
                 fit: BoxFit.contain, // Use BoxFit.cover for the image
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                      child: Text(
+                    "No Network",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ));
+                },
               ),
             ),
           ),
@@ -54,17 +62,17 @@ class _FoodSelectionWidgetState extends State<FoodSelectionWidget> {
                 ),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       "\$11",
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 25,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 80,
                     ),
-                    Container(
+                    SizedBox(
                         width: 40,
                         height: 40,
                         child: Image.asset("assets/images/icons8-chili-64.png"))

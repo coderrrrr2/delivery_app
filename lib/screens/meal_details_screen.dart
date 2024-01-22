@@ -84,15 +84,23 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Image.network(
-                            "https://res.cloudinary.com/eralphcloud/image/upload/v1705306732/routelift-list/n2y94lqrjnscu1vslcif.png",
+                            imageUrl, // Assuming you have a mealImageURL property
                             fit: BoxFit
                                 .contain, // Use BoxFit.cover for the image
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                  child: Text(
+                                "No Network",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ));
+                            },
                           ),
                         ),
                         const SizedBox(
                           height: 30,
                         ),
-                        Container(
+                        SizedBox(
                           height: 50,
                           width: screenWidth / 1.1,
                           child: const Padding(
@@ -117,7 +125,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: Row(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 42,
                                 height: 42,
                                 child: Image.asset(
@@ -129,7 +137,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w900),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 60,
                                 height: 60,
                                 child: Image.asset(
@@ -141,7 +149,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                                     fontSize: 18, fontWeight: FontWeight.w900),
                               ),
                               addWidth(width: 5),
-                              Container(
+                              SizedBox(
                                 width: 45,
                                 height: 45,
                                 child: Image.asset(
