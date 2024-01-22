@@ -1,4 +1,4 @@
-import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/configuration_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,13 +20,6 @@ class _MapWidgetsState extends State<MapWidgets> {
   void initState() {
     super.initState();
     getPolyPoints();
-  }
-
-  Future<void> _loadMarkerIcon() async {
-    bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)),
-      'assets/images/icons8-motorcycle-48.png',
-    );
   }
 
   void getPolyPoints() async {
@@ -62,7 +55,7 @@ class _MapWidgetsState extends State<MapWidgets> {
               ),
             },
             initialCameraPosition:
-                const CameraPosition(target: destination, zoom: 14.5),
+                const CameraPosition(target: sourceLocation, zoom: 20.5),
             markers: {
               const Marker(
                 markerId: MarkerId("Source"),

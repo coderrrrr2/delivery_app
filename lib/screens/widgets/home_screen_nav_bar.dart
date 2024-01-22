@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class HomeScreenNavBar extends StatelessWidget {
@@ -7,24 +5,20 @@ class HomeScreenNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-          left: 16, right: 16, bottom: Platform.isAndroid ? 16 : 0),
-      child: BottomAppBar(
-        elevation: 0.0,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: Container(
-            height: 60,
-            color: Colors.black,
-            child: Row(
-              children: [
-                navItem(Icons.search),
-                navItem(Icons.search),
-                navItem(Icons.search),
-                navItem(Icons.search)
-              ],
-            ),
+    return SizedBox(
+      height: 80,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: Container(
+          height: 60,
+          color: const Color.fromARGB(255, 35, 35, 35),
+          child: Row(
+            children: [
+              navItem(Icons.remove_circle_outlined),
+              navItem(Icons.search),
+              navItem(Icons.favorite),
+              navItem(Icons.search)
+            ],
           ),
         ),
       ),
@@ -33,9 +27,11 @@ class HomeScreenNavBar extends StatelessWidget {
 }
 
 Widget navItem(IconData icon) {
-  return Expanded(
-      child: Icon(
-    icon,
-    color: Colors.grey,
-  ));
+  return Padding(
+    padding: const EdgeInsets.only(left: 40, top: 20, right: 40, bottom: 30),
+    child: Icon(
+      icon,
+      color: Colors.grey,
+    ),
+  );
 }

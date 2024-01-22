@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-const String googleApiKey = "AIzaSyC1NuCw6CzMHYUxqjcHkUMQdPupK_zWk_o";
-
 Widget addWidth({required double width}) {
   return SizedBox(
     width: width,

@@ -3,9 +3,7 @@ import 'package:delivery_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
 class MealDetailsScreen extends StatefulWidget {
-  const MealDetailsScreen({Key? key});
-
-  //TODO:CAPITALIZE FIRST WORD FOR AKARA MEAL NAME
+  const MealDetailsScreen({super.key});
 
   @override
   State<MealDetailsScreen> createState() => _MealDetailsScreenState();
