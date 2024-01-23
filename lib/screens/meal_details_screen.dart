@@ -1,30 +1,67 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/models/meal_item.dart';
 import 'package:delivery_app/screens/map_screen.dart';
+import 'package:delivery_app/screens/widgets/meal_details_body.dart';
+import 'package:delivery_app/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MealDetailsScreen extends StatefulWidget {
-  const MealDetailsScreen({super.key});
+class MealDetailsScreen extends ConsumerStatefulWidget {
+  const MealDetailsScreen({super.key, required this.mealItem});
+
+  final MealItem mealItem;
 
   @override
-  State<MealDetailsScreen> createState() => _MealDetailsScreenState();
+  ConsumerState<MealDetailsScreen> createState() => _MealDetailsScreenState();
 }
 
-class _MealDetailsScreenState extends State<MealDetailsScreen> {
+class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
+  late double mealPrice;
+  late double checkoutPrice;
   int quantity = 1;
-  int checkoutPrice = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    mealPrice = widget.mealItem.mealPrice;
+    checkoutPrice = mealPrice;
+  }
+
+  void checkout(String name, double price, int quantitys) {
+    ref.watch(userProvider).checkout(name, price, quantitys);
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        checkoutPrice = mealPrice;
+        quantity = 1;
+      });
+    });
+  }
+
+  void updateCheckoutPrice(String operation) {
+    if (operation == "add") {
+      setState(() {
+        checkoutPrice = mealPrice * quantity;
+      });
+    } else if (operation == "subtract" && checkoutPrice > 1) {
+      setState(() {
+        checkoutPrice -= mealPrice;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = (MediaQuery.of(context).size.height) / 1.7;
+    double screenHeight = (MediaQuery.of(context).size.height) / 1.5;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 29, 27, 27),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
+      backgroundColor: const Color(0xFF2C2C34),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SafeArea(
+            child: Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
                 children: [
@@ -61,209 +98,134 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    width: screenWidth,
-                    height: screenHeight,
+          ),
+          Expanded(
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
                   ),
-                  Positioned(
-                    top: 20,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 400,
-                          height: 330,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Image.network(
-                            imageUrl, // Assuming you have a mealImageURL property
-                            fit: BoxFit
-                                .contain, // Use BoxFit.cover for the image
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                  child: Text(
-                                "No Network",
-                                style: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.bold),
-                              ));
-                            },
-                          ),
+                  width: screenWidth,
+                  height: screenHeight,
+                ),
+                Positioned(
+                  top: 20,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 400,
+                        height: 330,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        const SizedBox(
-                          height: 30,
+                        child: Image.network(
+                          widget.mealItem.image,
+                          fit: BoxFit.contain, //
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                                child: Text(
+                              "No Network",
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ));
+                          },
                         ),
-                        SizedBox(
-                          height: 50,
-                          width: screenWidth / 1.1,
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Text(
-                                "Chicken Curry with rice",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
+                      ),
+                      addHeight(height: 10),
+                      MealDetailsWidget(mealItem: widget.mealItem),
+                      addHeight(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 120,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color.fromARGB(255, 233, 231, 231),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (quantity > 1) {
+                                        quantity = quantity - 1;
+                                        updateCheckoutPrice("subtract");
+                                      }
+                                    });
+                                  },
+                                  child: const Icon(Icons.remove),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 42,
-                                height: 42,
-                                child: Image.asset(
-                                    "assets/images/icons8-furnitureandhousehold-64.png"),
-                              ),
-                              addWidth(width: 5),
-                              const Text(
-                                "30 min",
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w900),
-                              ),
-                              SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: Image.asset(
-                                    "assets/images/icons8-flame-96 copy.png"),
-                              ),
-                              const Text(
-                                "275 calories",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w900),
-                              ),
-                              addWidth(width: 5),
-                              SizedBox(
-                                width: 45,
-                                height: 45,
-                                child: Image.asset(
-                                    "assets/images/icons8-star-96.png"),
-                              ),
-                              addWidth(width: 5),
-                              const Text(
-                                '4.9',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w900),
-                              )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 170,
-                          width: 400,
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: SingleChildScrollView(
-                              child: Text(
-                                "Indulge in the delightful experience of Product 1, a perfect blend of flavors and nutrition to satisfy your cravings. Created with care, this dish promises a memorable dining experience.",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
+                                Text(
+                                  "$quantity",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      quantity = quantity + 1;
+                                      updateCheckoutPrice("add");
+                                    });
+                                  },
+                                  child: const Icon(Icons.add),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        addHeight(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 120,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: const Color.fromARGB(255, 233, 231, 231),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (quantity > 1) {
-                                          quantity = quantity - 1;
-                                          updateCheckoutPrice();
-                                        }
-                                      });
-                                    },
-                                    child: const Icon(Icons.remove),
-                                  ),
-                                  Text(
-                                    "$quantity",
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        quantity = quantity + 1;
-                                        updateCheckoutPrice();
-                                      });
-                                    },
-                                    child: const Icon(Icons.add),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () => moveTo(() => MapScreen(), context),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                checkout(
+                                    widget.mealItem.mealName,
+                                    double.parse(
+                                        checkoutPrice.toStringAsFixed(2)),
+                                    quantity);
+                                moveTo(() => MapScreen(), context);
+                              },
                               child: Container(
-                                width: 220,
                                 height: 70,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.black,
                                 ),
                                 child: Center(
-                                  child: Text(
-                                    'Checkout \$$checkoutPrice',
-                                    style: const TextStyle(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: AutoSizeText(
+                                      'Checkout \$${checkoutPrice.toStringAsFixed(2)}',
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 23,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines:
+                                          1, // Ensure text stays within a single line
+                                      overflow: TextOverflow
+                                          .ellipsis, // Handle overflow with ellipsis
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              )),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
-  }
-
-  void updateCheckoutPrice() {
-    checkoutPrice = 1 * quantity;
   }
 }

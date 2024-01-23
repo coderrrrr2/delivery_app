@@ -17,6 +17,3 @@ void moveTo(Function() screen, BuildContext context) {
     builder: (context) => screen(),
   ));
 }
-
-const String imageUrl =
-    "https://res.cloudinary.com/eralphcloud/image/upload/v1705306732/routelift-list/n2y94lqrjnscu1vslcif.png";

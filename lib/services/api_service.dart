@@ -1,17 +1,35 @@
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:delivery_app/models/meal_item.dart';
 
 class ApiService {
-  static const String baseUrl =
-      'https://85a01f90-53aa-40a1-ad48-db0feacab16c.mock.pstmn.io';
-
-  Future<List<dynamic>> getAllProducts() async {
-    final response = await http.get(Uri.parse('$baseUrl/products'));
+  static const String baseUrl = 'https://api.routelift.com/api/test';
+  Future<List<MealItem>> getAllProducts() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/products'),
+    );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final Map<String, dynamic> responseData = jsonDecode(
+        response.body,
+      );
+
+      if (responseData['success'] == true) {
+        // Extract the list of products from the 'data' field
+        final List<dynamic> jsonList = responseData['data'];
+
+        // Convert the list of Map<String, dynamic> to a list of MealItem
+        List<MealItem> mealItemList = jsonList
+            .map((json) => MealItem.fromJson(json as Map<String, dynamic>))
+            .toList();
+
+        return mealItemList;
+      } else {
+        throw Exception('Failed to fetch products: ${responseData['message']}');
+      }
     } else {
-      throw Exception('Failed to load products');
+      throw Exception('Failed to load products: ${response.statusCode}');
     }
   }
 
@@ -31,3 +49,7 @@ class ApiService {
     }
   }
 }
+
+final userProvider = Provider.autoDispose<ApiService>((ref) {
+  return ApiService();
+});

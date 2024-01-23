@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/providers/providers.dart';
 import 'package:delivery_app/screens/widgets/food_categories.dart';
 import 'package:delivery_app/screens/widgets/home_screen_nav_bar.dart';
-import 'package:delivery_app/models/meal_item.dart';
 import 'package:delivery_app/screens/meal_details_screen.dart';
 import 'package:delivery_app/screens/widgets/food_selection_widget.dart';
 import 'package:delivery_app/image_categories_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  Color containerColor = Colors.white;
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  String selectedCategory = "Main";
 
-  final List<MealItem> meals = [
-    const MealItem(mealName: "Pizza"),
-    const MealItem(mealName: "Pizza 2"),
-    const MealItem(mealName: "Pizza 2"),
-  ];
+  void handleCategoryPressed(String category) {
+    setState(() {
+      if (selectedCategory == category) {
+        selectedCategory = "";
+      } else {
+        selectedCategory = category;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final mealsAsync = ref.watch(dataProvider);
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 238, 234, 234),
+      backgroundColor: const Color(0xFFEBEDEB),
       body: Stack(
         children: [
           Padding(
@@ -34,8 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
               top: 10,
               left: 20,
               right: 15,
-              bottom:
-                  60, // Adjust the bottom padding to leave space for the bottom navigation bar
             ),
             child: SafeArea(
               child: Column(
@@ -47,7 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Spacer(),
                       Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100)),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
                         width: 50,
                         height: 50,
                         child: ClipOval(
@@ -59,9 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  addHeight(height: 20),
                   const Text(
                     "Good Food.",
                     style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
@@ -75,6 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: imageCategories.entries
                         .map((MapEntry<String, String> entry) => FoodCategories(
                               entryObject: entry,
+                              onPressed: () => handleCategoryPressed(entry.key),
+                              isSelected: entry.key == selectedCategory,
                             ))
                         .toList(),
                   ),
@@ -86,17 +92,38 @@ class _HomeScreenState extends State<HomeScreen> {
                   addHeight(height: 30),
                   SizedBox(
                     width: double.infinity,
-                    height: 305,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: meals.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () =>
-                              moveTo(() => const MealDetailsScreen(), context),
-                          child: FoodSelectionWidget(
-                            mealName: meals[index].mealName,
-                          ),
+                    height: 330,
+                    child: mealsAsync.maybeWhen(
+                      data: (meals) {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: meals.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () => moveTo(
+                                () => MealDetailsScreen(mealItem: meals[index]),
+                                context,
+                              ),
+                              child: FoodSelectionWidget(
+                                mealItem: meals[index],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      loading: () {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      error: (error, stackTrace) {
+                        return Center(
+                          child: Text('Error loading meals: $error'),
+                        );
+                      },
+                      orElse: () {
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
                       },
                     ),

@@ -1,11 +1,12 @@
 import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/models/meal_item.dart';
 import 'package:flutter/material.dart';
 
 class FoodSelectionWidget extends StatefulWidget {
-  const FoodSelectionWidget({Key? key, required this.mealName})
+  const FoodSelectionWidget({Key? key, required this.mealItem})
       : super(key: key);
 
-  final String mealName;
+  final MealItem mealItem;
 
   @override
   State<FoodSelectionWidget> createState() => _FoodSelectionWidgetState();
@@ -20,11 +21,19 @@ class _FoodSelectionWidgetState extends State<FoodSelectionWidget> {
         alignment: Alignment.bottomCenter,
         children: [
           Container(
-            width: 210,
+            width: 230,
             height: 230,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -33,10 +42,11 @@ class _FoodSelectionWidgetState extends State<FoodSelectionWidget> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
               ),
-              width: 160,
+              width: 180,
               height: 170,
               child: Image.network(
-                imageUrl, // Assuming you have a mealImageURL property
+                widget.mealItem
+                    .image, // Assuming you have a mealImageURL property
                 fit: BoxFit.contain, // Use BoxFit.cover for the image
                 errorBuilder: (context, error, stackTrace) {
                   return const Center(
@@ -53,20 +63,18 @@ class _FoodSelectionWidgetState extends State<FoodSelectionWidget> {
             child: Column(
               children: [
                 Text(
-                  widget.mealName,
+                  widget.mealItem.mealName,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 20),
+                      fontWeight: FontWeight.w600, fontSize: 23),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                addHeight(height: 10),
                 Row(
                   children: [
-                    const Text(
-                      "\$11",
-                      style: TextStyle(
+                    Text(
+                      "\$${widget.mealItem.mealPrice}",
+                      style: const TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 25,
+                        fontSize: 22,
                       ),
                     ),
                     const SizedBox(

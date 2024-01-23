@@ -7,11 +7,12 @@ class HomeScreenNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 80,
+      width: double.infinity,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
         child: Container(
           height: 60,
-          color: const Color.fromARGB(255, 35, 35, 35),
+          color: const Color(0xFF2B2C34),
           child: Row(
             children: [
               navItem(Icons.remove_circle_outlined),
