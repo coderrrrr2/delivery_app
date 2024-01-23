@@ -117,8 +117,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         );
                       },
                       error: (error, stackTrace) {
-                        return Center(
-                          child: Text('Error loading meals: $error'),
+                        return const Center(
+                          child: Text(
+                            'No Network',
+                            style: TextStyle(
+                                fontSize: 40, fontWeight: FontWeight.bold),
+                          ),
                         );
                       },
                       orElse: () {
