@@ -112,7 +112,7 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
                   height: screenHeight,
                 ),
                 Positioned(
-                  top: 20,
+                  top: 10,
                   child: Column(
                     children: [
                       Container(
@@ -134,9 +134,9 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
                           },
                         ),
                       ),
-                      addHeight(height: 10),
-                      MealDetailsWidget(mealItem: widget.mealItem),
                       addHeight(height: 20),
+                      MealDetailsWidget(mealItem: widget.mealItem),
+                      addHeight(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
